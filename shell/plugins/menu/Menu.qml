@@ -730,7 +730,9 @@ Item {
     panel.freezeCardTop()
     if (!root.item(id)) id = "root"
     if (pushHistory && id !== root.activeMenu) {
-      root.navStack = root.navStack.concat([{ id: root.activeMenu, index: root.selectedIndex }])
+      // A filtered list's index means nothing once the filter clears, so a
+      // menu left mid-search comes back at the top.
+      root.navStack = root.navStack.concat([{ id: root.activeMenu, index: root.filterText.trim() ? 0 : root.selectedIndex }])
     }
     root.activeMenu = id
     root.filterText = ""
