@@ -210,6 +210,13 @@ function isGridStep(from, to, columns) {
   return distance === 1 && Math.floor(from / columns) === Math.floor(to / columns)
 }
 
+// Whether the pointer moved at least a pixel from `anchor`, the last position
+// that counted. The caller keeps the anchor until this is true, so slow
+// movement in fractional steps adds up instead of being dropped step by step.
+function pointerMoved(anchor, point) {
+  return Math.abs(point.x - anchor.x) >= 1 || Math.abs(point.y - anchor.y) >= 1
+}
+
 // Top-left of the ring for the cell at `index` in the grid's content, inset by
 // `gutter`. A right-to-left layout fills each row from the right.
 function gridCellOrigin(index, columns, cellWidth, cellHeight, gutter, rightToLeft) {
@@ -238,6 +245,7 @@ if (typeof module !== "undefined") {
     contrastRatio: contrastRatio,
     selectionRingColor: selectionRingColor,
     isGridStep: isGridStep,
+    pointerMoved: pointerMoved,
     gridCellOrigin: gridCellOrigin
   }
 }

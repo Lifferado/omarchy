@@ -164,14 +164,15 @@ Item {
     if (root.ringSnap) Qt.callLater(function() { root.ringSnap = false })
   }
 
-  // Hover selects only when the pointer moved. The first report after opening
-  // just notes where it is, and the uninstall prompt and the app menu hold the
-  // selection on the app they name.
+  // Hover selects only when the pointer moved a pixel from where it last
+  // counted; slower movement adds up until it does. The first report after
+  // opening just notes where it is, and the uninstall prompt and the app menu
+  // hold the selection on the app they name.
   function hoverAt(index, point) {
     var last = root.lastPointer
+    if (last && !DockModel.pointerMoved(last, point)) return
     root.lastPointer = point
     if (!last || root.dragging || root.uninstallEntry || root.menuEntry) return
-    if (Math.abs(point.x - last.x) < 1 && Math.abs(point.y - last.y) < 1) return
     if (index !== root.selectedIndex) root.moveTo(index, "pointer")
   }
 

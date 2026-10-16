@@ -141,6 +141,18 @@ assertDeepEqual(dock.gridCellOrigin(0, 7, 143, 126, 6, false), { x: 6, y: 6 }, '
 assertDeepEqual(dock.gridCellOrigin(9, 7, 143, 126, 6, false), { x: 292, y: 132 }, 'app grid rings a cell on the last, partial row')
 assertDeepEqual(dock.gridCellOrigin(0, 7, 143, 126, 6, true), { x: 864, y: 6 }, 'app grid fills rows from the right in a right-to-left layout')
 
+assert(!dock.pointerMoved({ x: 40, y: 40 }, { x: 40, y: 40 }), 'app grid ignores a pointer that stays put while the grid scrolls')
+let anchor = { x: 0, y: 0 }
+const counted = []
+for (const x of [0.4, 0.8, 1.2, 1.6, 2.0, 2.4]) {
+  const point = { x, y: 0.3 }
+  if (dock.pointerMoved(anchor, point)) {
+    counted.push(x)
+    anchor = point
+  }
+}
+assertDeepEqual(counted, [1.2, 2.4], 'app grid adds up slow fractional pointer steps until they make a pixel')
+
 JS
 
 home="$TMPDIR/home"
